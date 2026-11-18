@@ -1,1 +1,449 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>Drive Downloader</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #101827;
+  color: #ffffff;
+  min-height: 100vh;
+  padding: 24px 16px;
+}
+
+.container {
+  width: 100%;
+  max-width: 480px;
+  margin: 45px auto;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.logo-icon {
+  width: 65px;
+  height: 65px;
+  background: #2563eb;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  margin: 0 auto 15px;
+}
+
+.logo h1 {
+  font-size: 25px;
+  margin-bottom: 8px;
+}
+
+.logo p {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.card {
+  background: #1c293b;
+  border: 1px solid #334155;
+  padding: 23px;
+  border-radius: 18px;
+}
+
+.card h2 {
+  font-size: 18px;
+  margin-bottom: 9px;
+}
+
+.description {
+  color: #9ca3af;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+
+label {
+  font-size: 13px;
+  display: block;
+  margin-bottom: 10px;
+  color: #d1d5db;
+}
+
+.input-group {
+  display: flex;
+  gap: 8px;
+}
+
+input {
+  min-width: 0;
+  flex: 1;
+  padding: 14px;
+  background: #101827;
+  border: 1px solid #475569;
+  border-radius: 10px;
+  color: white;
+  outline: none;
+  font-size: 13px;
+}
+
+input:focus {
+  border-color: #3b82f6;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.paste {
+  background: #334155;
+  color: white;
+  padding: 0 13px;
+}
+
+.primary {
+  width: 100%;
+  padding: 15px;
+  background: #2563eb;
+  color: white;
+  margin-top: 15px;
+  font-size: 15px;
+}
+
+.primary:active {
+  background: #1d4ed8;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 15px;
+  background: #101827;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  display: none;
+}
+
+.result h3 {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.result p {
+  color: #9ca3af;
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.download {
+  width: 100%;
+  padding: 14px;
+  background: #16a34a;
+  color: white;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.status {
+  font-size: 12px;
+  color: #93c5fd;
+  margin-top: 13px;
+  line-height: 1.6;
+}
+
+.history {
+  margin-top: 25px;
+}
+
+.history h3 {
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.history-item {
+  background: #1c293b;
+  border: 1px solid #334155;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.history-item small {
+  display: block;
+  color: #9ca3af;
+  margin-top: 5px;
+}
+
+.clear {
+  background: transparent;
+  color: #f87171;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.footer {
+  text-align: center;
+  color: #64748b;
+  font-size: 11px;
+  margin-top: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="logo">
+    <div class="logo-icon">⬇</div>
+    <h1>Drive Downloader</h1>
+    <p>Download file Google Drive dengan mudah.</p>
+  </div>
+
+  <div class="card">
+
+    <h2>Download File</h2>
+
+    <p class="description">
+      Tempelkan link Google Drive untuk memeriksa
+      dan mengunduh file.
+    </p>
+
+    <label for="driveLink">Link Google Drive</label>
+
+    <div class="input-group">
+      <input
+        type="url"
+        id="driveLink"
+        placeholder="Tempelkan link di sini..."
+      >
+
+      <button class="paste" onclick="pasteLink()">
+        Tempel
+      </button>
+    </div>
+
+    <button class="primary" onclick="checkLink()">
+      Periksa Link
+    </button>
+
+    <div class="result" id="result">
+
+      <h3>Link berhasil dikenali</h3>
+
+      <p id="fileInfo"></p>
+
+      <button class="download" onclick="downloadFile()">
+        ↓ Download File
+      </button>
+
+      <div class="status" id="status"></div>
+
+    </div>
+
+  </div>
+
+  <div class="history">
+    <h3>Riwayat Pemeriksaan</h3>
+    <div id="historyList"></div>
+    <button class="clear" onclick="clearHistory()">
+      Hapus Riwayat
+    </button>
+  </div>
+
+  <div class="footer">
+    Drive Downloader • Versi 1.0
+  </div>
+
+</div>
+
+<script>
+let currentFileId = "";
+let currentLink = "";
+
+function getFileId(link) {
+  try {
+    const url = new URL(link);
+    const host = url.hostname.toLowerCase();
+
+    if (
+      host !== "drive.google.com" &&
+      host !== "docs.google.com"
+    ) {
+      return null;
+    }
+
+    const match = url.pathname.match(/\/d\/([a-zA-Z0-9_-]+)/);
+
+    if (match) return match[1];
+
+    if (
+      host === "drive.google.com" &&
+      url.pathname === "/open"
+    ) {
+      return url.searchParams.get("id");
+    }
+
+    return null;
+
+  } catch (error) {
+    return null;
+  }
+}
+
+async function pasteLink() {
+  try {
+    const text = await navigator.clipboard.readText();
+
+    document.getElementById("driveLink").value = text;
+
+    checkLink();
+
+  } catch (error) {
+    alert(
+      "Clipboard tidak dapat diakses. " +
+      "Silakan tekan kolom input lalu pilih Tempel."
+    );
+  }
+}
+
+function checkLink() {
+  const input = document.getElementById("driveLink");
+  const link = input.value.trim();
+
+  const result = document.getElementById("result");
+  const info = document.getElementById("fileInfo");
+  const status = document.getElementById("status");
+
+  const id = getFileId(link);
+
+  if (!id) {
+    result.style.display = "none";
+    alert(
+      "Link tidak valid. Pastikan kamu menggunakan link Google Drive yang benar."
+    );
+    return;
+  }
+
+  currentFileId = id;
+  currentLink = link;
+
+  info.innerHTML =
+    "ID File: " + id +
+    "<br>Jenis: File Google Drive" +
+    "<br>Ukuran: Belum diketahui";
+
+  status.textContent =
+    "Link berhasil dikenali. Izin akses dan informasi file belum diverifikasi.";
+
+  result.style.display = "block";
+
+  saveHistory(link);
+}
+
+function downloadFile() {
+  if (!currentFileId) return;
+
+  const downloadUrl =
+    "https://drive.google.com/uc?export=download&id=" +
+    encodeURIComponent(currentFileId);
+
+  document.getElementById("status").textContent =
+    "Permintaan download telah dibuka. Periksa unduhan browser atau ikuti konfirmasi Google Drive jika muncul.";
+
+  const link = document.createElement("a");
+
+  link.href = downloadUrl;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+function saveHistory(link) {
+  let history = JSON.parse(
+    localStorage.getItem("driveHistory") || "[]"
+  );
+
+  history = history.filter(item => item !== link);
+
+  history.unshift(link);
+
+  history = history.slice(0, 10);
+
+  localStorage.setItem(
+    "driveHistory",
+    JSON.stringify(history)
+  );
+
+  showHistory();
+}
+
+function showHistory() {
+  const history = JSON.parse(
+    localStorage.getItem("driveHistory") || "[]"
+  );
+
+  const list = document.getElementById("historyList");
+
+  list.innerHTML = "";
+
+  if (history.length === 0) {
+    list.innerHTML =
+      '<p style="color:#9ca3af;font-size:12px">Belum ada riwayat.</p>';
+    return;
+  }
+
+  history.forEach(link => {
+    const item = document.createElement("div");
+
+    item.className = "history-item";
+
+    const text = document.createElement("div");
+    text.textContent = link;
+
+    const small = document.createElement("small");
+    small.textContent = "Link pernah diperiksa";
+
+    item.appendChild(text);
+    item.appendChild(small);
+
+    item.onclick = () => {
+      document.getElementById("driveLink").value = link;
+      checkLink();
+    };
+
+    list.appendChild(item);
+  });
+}
+
+function clearHistory() {
+  if (confirm("Hapus semua riwayat?")) {
+    localStorage.removeItem("driveHistory");
+    showHistory();
+  }
+}
+
+showHistory();
+</script>
+
+</body>
+  </html>
+  
