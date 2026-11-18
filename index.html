@@ -276,8 +276,156 @@ button {
 let currentFileId = "";
 let currentLink = "";
 
+
 function getFileId(link) {
   try {
+    const url = new URL(link.trim());
+    const host = url.hostname.toLowerCase();
+
+    const allowedHosts = [
+      "drive.google.com",
+      "docs.google.com"
+    ];
+
+    if (
+      url.protocol !== "https:" ||
+      !allowedHosts.includes(host)
+    ) {
+      return null;
+    }
+
+    // Link berbentuk /file/d/ID
+    // /document/d/ID
+    // /spreadsheets/d/ID
+    // /presentation/d/ID
+
+    const match = url.pathname.match(
+      /\/(?:file|document|spreadsheets|presentation)\/d\/([a-zA-Z0-9_-]+)/
+    );
+
+    if (match) {
+      return match[1];
+    }
+
+    // Link berbentuk /open?id=ID atau /uc?id=ID
+
+    if (
+      host === "drive.google.com" &&
+      ["/open", "/uc"].includes(url.pathname)
+    ) {
+      const id = url.searchParams.get("id");
+
+      if (id && /^[a-zA-Z0-9_-]+$/.test(id)) {
+        return id;
+      }
+    }
+
+    return null;
+
+  } catch (error) {
+    return null;
+  }
+  }
+  
+
+function getFileId(link) {
+  try {
+    const url = new URL(link.trim());
+    const host = url.hostname.toLowerCase();
+
+    const allowedHosts = [
+      "drive.google.com",
+      "docs.google.com"
+    ];
+
+    if (
+      url.protocol !== "https:" ||
+      !allowedHosts.includes(host)
+    ) {
+      return null;
+    }
+
+    // Link berbentuk /file/d/ID
+    // /document/d/ID
+    // /spreadsheets/d/ID
+    // /presentation/d/ID
+
+    const match = url.pathname.match(
+      /\/(?:file|document|spreadsheets|presentation)\/d\/([a-zA-Z0-9_-]+)/
+    );
+
+    if (match) {
+      return match[1];
+    }
+
+    // Link berbentuk /open?id=ID atau /uc?id=ID
+
+    if (
+      host === "drive.google.com" &&
+      ["/open", "/uc"].includes(url.pathname)
+    ) {
+      const id = url.searchParams.get("id");
+
+      if (id && /^[a-zA-Z0-9_-]+$/.test(id)) {
+        return id;
+      }
+    }
+
+    return null;
+
+  } catch (error) {
+    return null;
+  }
+  }
+  
+    const url = new URL(link.trim());
+    const host = url.hostname.toLowerCase();
+
+    const allowedHosts = [
+      "drive.google.com",
+      "docs.google.com"
+    ];
+
+    if (
+      url.protocol !== "https:" ||
+      !allowedHosts.includes(host)
+    ) {
+      return null;
+    }
+
+    // Link berbentuk /file/d/ID
+    // /document/d/ID
+    // /spreadsheets/d/ID
+    // /presentation/d/ID
+
+    const match = url.pathname.match(
+      /\/(?:file|document|spreadsheets|presentation)\/d\/([a-zA-Z0-9_-]+)/
+    );
+
+    if (match) {
+      return match[1];
+    }
+
+    // Link berbentuk /open?id=ID atau /uc?id=ID
+
+    if (
+      host === "drive.google.com" &&
+      ["/open", "/uc"].includes(url.pathname)
+    ) {
+      const id = url.searchParams.get("id");
+
+      if (id && /^[a-zA-Z0-9_-]+$/.test(id)) {
+        return id;
+      }
+    }
+
+    return null;
+
+  } catch (error) {
+    return null;
+  }
+  }
+  
     const url = new URL(link);
     const host = url.hostname.toLowerCase();
 
